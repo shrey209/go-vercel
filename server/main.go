@@ -78,6 +78,9 @@ func (app *App) handleDeploy(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	go app.cleanup("code-storage/t1")
+
 	c.JSON(http.StatusOK, gin.H{"message": "Deployment successful"})
 }
 
@@ -134,4 +137,14 @@ func runContainer(cli *client.Client, hostPath, containerPath string) error {
 	}
 
 	return nil
+}
+
+func (app *App) cleanup(path string) {
+	err := os.RemoveAll(path)
+	if err != nil {
+		log.Println("Error deleting folder:", err)
+	} else {
+		log.Println(fmt.Sprintf("Successfully deleted folder: %s", path))
+	}
+
 }
