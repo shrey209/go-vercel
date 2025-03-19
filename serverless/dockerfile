@@ -1,0 +1,34 @@
+# Dockerfile
+FROM ubuntu:focal
+
+# Install required dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    unzip \
+    git
+
+# Install Node.js
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs
+
+# Install AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install && \
+    rm -rf aws awscliv2.zip
+
+# Set working directory
+WORKDIR /home/app
+
+# Set environment variables (Hardcoded for now)
+ENV GIT_REPOSITORY__URL="https://github.com/shreyash-209/t1.git"
+ENV CODE_PATH="vite-project"
+
+# Copy the script
+COPY main.sh main.sh
+
+# Give execute permissions
+RUN chmod +x main.sh
+
+# Set entrypoint
+ENTRYPOINT ["/bin/bash", "/home/app/main.sh"]

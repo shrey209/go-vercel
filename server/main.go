@@ -79,7 +79,7 @@ func (app *App) handleDeploy(c *gin.Context) {
 		return
 	}
 
-	go app.cleanup("code-storage/t1")
+	//go app.cleanup("code-storage/t1")
 
 	c.JSON(http.StatusOK, gin.H{"message": "Deployment successful"})
 }
